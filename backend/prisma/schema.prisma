@@ -1,0 +1,298 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  STARTUP
+  INVESTOR
+}
+
+enum AnalyticsEventType {
+  EMAIL_SEARCH
+  DOMAIN_SEARCH
+  DATABASE_SEARCH
+}
+
+model User {
+  id                        Int       @id @default(autoincrement())
+  name                      String
+  email                     String    @unique
+  password                  String
+  role                      UserRole  @default(INVESTOR)
+  organizationId            Int?  
+  organization              Organization? @relation(fields: [organizationId], references: [id]) 
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  passwordResetToken        String?
+  passwordResetExpires      DateTime?
+  emailVerificationToken    String?
+  emailVerificationExpires  DateTime?
+  emailOtpLastSentAt        DateTime?
+  isVerified                Boolean   @default(false)
+
+  mobile                    String?   @unique
+  mobileVerificationToken   String?
+  otpRequestedAt            DateTime?
+  mobileVerificationExpires DateTime?
+  isMobileVerified          Boolean   @default(false)
+
+  leadsAdded       Lead[]           @relation("AddedByUser")
+  activityLogs     ActivityLog[]
+  analyticsEvents  AnalyticsEvent[]
+  notifications    Notification[]
+
+  @@map("users")
+
+}
+
+model Organization {
+  id            Int            @id @default(autoincrement())
+  name          String
+  website       String?        @default("")
+  region        String?        @default("Global")
+  type          String?        @default("Startup")
+  contactName   String?        @default("")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  users         User[]
+  dealStartups  DealStartup[]
+  dealInvestors DealInvestor[]
+  @@map("organizations")
+}
+
+enum LeadStatus {
+  new
+  contacted
+  qualified
+  converted
+  lost
+  in_progress
+  closed
+}
+
+enum LeadSource {
+  website
+  referral
+  social_media
+  email_campaign
+  cold_call
+  trade_show
+  partner
+  other
+}
+
+model Lead {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String?
+  domain    String?
+  jobTitle        String?
+  managementLevel String?
+  department      String?
+  location        String?
+  industry        String?
+  skills          String?
+  companyLocation String?
+  companySize     String?
+  revenue         String?
+  companyName     String?
+
+  status    LeadStatus @default(new)
+  source    LeadSource @default(other)
+
+  followupSent Boolean  @default(false)
+  contactedAt  DateTime?
+
+  engagement   Json?   // nested object from mongoose
+  score        Int     @default(0)
+  scoreDetails Json?   // nested object from mongoose
+
+  addedById Int?
+  addedBy   User?   @relation("AddedByUser", fields: [addedById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+enum DealStage {
+  NEW
+  NEGOTIATION
+  DUE_DILIGENCE
+  CLOSED
+  CANCELLED
+}
+
+enum DealStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+}
+
+model Deal {
+  id        Int           @id @default(autoincrement())
+  amount    Float
+  stage     DealStage     @default(NEW)
+  status    DealStatus    @default(ACTIVE)
+  startups  DealStartup[]
+  investors DealInvestor[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("deals")
+}
+
+model DealStartup {
+  id     Int    @id @default(autoincrement())
+  dealId Int
+  orgId  Int
+  deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  org    Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, orgId])
+  @@map("deal_startups")
+}
+
+model DealInvestor {
+  id     Int    @id @default(autoincrement())
+  dealId Int
+  orgId  Int
+  deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  org    Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([dealId, orgId])
+  @@map("deal_investors")
+}
+
+model BlockchainTransaction {
+  id              Int      @id @default(autoincrement())
+  recordId        String   // The ID of the record stored on blockchain (e.g., "deal-123")
+  dataHash        String   // Hash of the data stored
+  transactionHash String   @unique // Blockchain transaction hash
+  blockNumber     Int      // Block number where transaction was mined
+  timestamp       DateTime @default(now()) // When transaction was created
+  networkName     String   @default("sepolia") // Network used (sepolia, polygon-testnet, etc.)
+  status          String   @default("pending") // pending, confirmed, failed
+  gasUsed         String?  // Gas used for the transaction
+  errorMessage    String?  // Error message if transaction failed
+  retryCount      Int      @default(0) // Number of retry attempts
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([recordId])
+  @@index([transactionHash])
+  @@index([status])
+  @@map("blockchain_transactions")
+}
+
+model OrganizationType {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("organization_types")
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+
+  name        String   @unique
+  slug        String   @unique
+  description String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@map("tags")
+}
+
+model ActivityLog {
+  id         Int      @id @default(autoincrement())
+
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+
+  action     String
+  entityType String
+  entityId   Int?
+
+  metadata   Json     @default("{}")
+
+  ipAddress  String?  
+  userAgent  String?  
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  @@index([userId])
+  @@index([action])
+  @@index([entityType])
+
+  @@map("activity_logs")
+}
+
+model AnalyticsEvent {
+  id        Int                 @id @default(autoincrement())
+  userId    Int?
+  user      User?               @relation(fields: [userId], references: [id])
+  type      AnalyticsEventType
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@map("analytics_events")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  message   String
+  is_read   Boolean  @default(false)
+  link      String?
+  metadata  Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([type])
+  @@index([is_read])
+  @@map("notifications")
+}
+
+model EmailSearch {
+  id         Int      @id @default(autoincrement())
+  email      String
+  domain     String
+  valid      Boolean  @default(false)
+  verifiedBy String?  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("email_searches")
+}
+
+model DomainSearch {
+  id             Int      @id @default(autoincrement())
+  domain         String
+  status         String   @default("active")
+  expirationDate String?
+  dnsRecords     Json     @default("{\"A\": [], \"MX\": [], \"NS\": []}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("domain_searches")
+}
