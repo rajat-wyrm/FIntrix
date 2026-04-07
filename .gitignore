@@ -1,0 +1,34 @@
+# Backend
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env
+.env.local
+.env.*.local
+prisma/migrations/dev.db*
+.DS_Store
+__pycache__/
+*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+
+# Misc
+*.zip
+*.tar.gz
+.cache/
