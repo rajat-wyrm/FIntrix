@@ -1,0 +1,52 @@
+{
+  "name": "fintrix-backend",
+  "version": "1.0.0",
+  "description": "Fintrix backend API",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "npm run test:unit && node --test test/api.test.js",
+    "test:unit": "node --test test/logger.test.js test/validations.test.js test/ai.test.js test/smoke.test.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "node -e \"console.log('No build step required for CommonJS backend')\"",
+    "lint": "node scripts/lint.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:push": "prisma db push",
+    "seed": "node seed/seedOrgTypes.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.19.2",
+    "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "ethers": "^6.16.0",
+    "express": "^4.21.2",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.11.1",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.0",
+    "node-cron": "^4.2.1",
+    "node-telegram-bot-api": "^0.67.0",
+    "nodemailer": "^7.0.12",
+    "socket.io": "^4.8.3",
+    "twilio": "^5.12.1",
+    "web3": "^4.16.0",
+    "whois-json": "^2.0.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "prisma": "^6.19.2",
+    "socket.io-client": "^4.8.3"
+  },
+  "type": "commonjs"
+}
