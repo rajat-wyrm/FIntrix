@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.env
+.env.local
+.env.*.local
+prisma/migrations/dev.db*
+.DS_Store
+__pycache__/
+*.pyc
