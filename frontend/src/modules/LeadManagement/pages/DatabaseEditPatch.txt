@@ -1,0 +1,226 @@
+import InputField from "../components/InputField";
+
+import InputField from "../components/InputField";
+
+
+
+  {
+    id: 1,
+    name: "TechNova Solutions",
+    founded: { day: 1, month: "Jan", year: 2010 },
+    companyTitle: "Tech Company",
+    jobTitle: "Software Engineer",
+    location: "Bangalore",
+    industry: "IT Services",
+    skills: ["React", "Node.js"],
+    size: "100-200",
+    revenue: "50L-1Cr",
+    specialties: ["Web Development"],
+  },
+  {
+    id: 2,
+    name: "GreenLeaf Marketing",
+    founded: { day: 15, month: "Jun", year: 2012 },
+    companyTitle: "GreenLeaf Co",
+    jobTitle: "Marketing Manager",
+    location: "Hyderabad",
+    industry: "Marketing",
+    skills: ["SEO", "Content"],
+    size: "50-100",
+    revenue: "20L-50L",
+    specialties: ["Digital Marketing"],
+  },
+  {
+    id: 3,
+    name: "FinSecure Pvt Ltd",
+    founded: { day: 3, month: "Mar", year: 2008 },
+    companyTitle: "FinSecure",
+    jobTitle: "Data Analyst",
+    location: "Chennai",
+    industry: "Finance",
+    skills: ["Python", "SQL"],
+    size: "200-500",
+    revenue: "1Cr-5Cr",
+    specialties: ["Risk Analysis"],
+  },
+  {
+    id: 4,
+    name: "HealthFirst Hospitals",
+    founded: { day: 20, month: "Sep", year: 2015 },
+    companyTitle: "HealthFirst",
+    jobTitle: "HR Executive",
+    location: "Bangalore",
+    industry: "Healthcare",
+    skills: ["Recruitment"],
+    size: "500-1000",
+    revenue: "5Cr-10Cr",
+    specialties: ["Talent Acquisition"],
+  },
+];
+
+  {
+    id: 1,
+    name: "TechNova Solutions",
+    founded: { day: 1, month: "Jan", year: 2010 },
+    companyTitle: "Tech Company",
+    jobTitle: "Software Engineer",
+    location: "Bangalore",
+    industry: "IT Services",
+    skills: ["React", "Node.js"],
+    size: "100-200",
+    revenue: "50L-1Cr",
+    specialties: ["Web Development"],
+  },
+  {
+    id: 2,
+    name: "GreenLeaf Marketing",
+    founded: { day: 15, month: "Jun", year: 2012 },
+    companyTitle: "GreenLeaf Co",
+    jobTitle: "Marketing Manager",
+    location: "Hyderabad",
+    industry: "Marketing",
+    skills: ["SEO", "Content"],
+    size: "50-100",
+    revenue: "20L-50L",
+    specialties: ["Digital Marketing"],
+  },
+  {
+    id: 3,
+    name: "FinSecure Pvt Ltd",
+    founded: { day: 3, month: "Mar", year: 2008 },
+    companyTitle: "FinSecure",
+    jobTitle: "Data Analyst",
+    location: "Chennai",
+    industry: "Finance",
+    skills: ["Python", "SQL"],
+    size: "200-500",
+    revenue: "1Cr-5Cr",
+    specialties: ["Risk Analysis"],
+  },
+  {
+    id: 4,
+    name: "HealthFirst Hospitals",
+    founded: { day: 20, month: "Sep", year: 2015 },
+    companyTitle: "HealthFirst",
+    jobTitle: "HR Executive",
+    location: "Bangalore",
+    industry: "Healthcare",
+    skills: ["Recruitment"],
+    size: "500-1000",
+    revenue: "5Cr-10Cr",
+    specialties: ["Talent Acquisition"],
+  },
+];
+
+
+
+
+  // left side filters
+  const [jobTitle, setJobTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [skills, setSkills] = useState("");
+  const [size, setSize] = useState("");
+  const [revenue, setRevenue] = useState("");
+  const [specialties, setSpecialties] = useState("");
+  // company-specific form state
+  const [companyTitle, setCompanyTitle] = useState("");
+  const [companyLocation, setCompanyLocation] = useState("");
+  const [foundedDay, setFoundedDay] = useState("");
+  const [foundedMonth, setFoundedMonth] = useState("");
+  const [foundedYear, setFoundedYear] = useState("");
+  const [tab, setTab] = useState("prospect"); // "prospect" | "companies"
+  const [searchClicked, setSearchClicked] = useState(false);
+  // header quick-search (appears when hovering/clicking title area)
+  const [quickSearch, setQuickSearch] = useState("");
+  const [showHeaderInput, setShowHeaderInput] = useState(false);
+  const [headerHovered, setHeaderHovered] = useState(false);
+  const headerInputRef = useRef(null);
+
+  // State to hold companies data so that jobTitle can be edited
+  const [companies, setCompanies] = useState(MOCK_COMPANIES);
+
+  // State to track which jobTitle is currently being edited (by company id)
+  const [editingJobTitleId, setEditingJobTitleId] = useState(null);
+  // current editing value for the job title input
+  const [editingJobTitleValue, setEditingJobTitleValue] = useState("");
+
+  // left side filters
+  const [jobTitle, setJobTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [skills, setSkills] = useState("");
+  const [size, setSize] = useState("");
+  const [revenue, setRevenue] = useState("");
+  const [specialties, setSpecialties] = useState("");
+  // company-specific form state
+  const [companyTitle, setCompanyTitle] = useState("");
+  const [companyLocation, setCompanyLocation] = useState("");
+  const [foundedDay, setFoundedDay] = useState("");
+  const [foundedMonth, setFoundedMonth] = useState("");
+  const [foundedYear, setFoundedYear] = useState("");
+  const [tab, setTab] = useState("prospect"); // "prospect" | "companies"
+  const [searchClicked, setSearchClicked] = useState(false);
+  // header quick-search (appears when hovering/clicking title area)
+  const [quickSearch, setShowHeaderInput] = useState(false);
+  const [headerHovered, setHeaderHovered] = useState(false);
+  const headerInputRef = useRef(null);
+
+  // State to hold companies data so that jobTitle can be edited
+  const [companies, setCompanies] = useState(MOCK_COMPANIES);
+
+  // State to track which jobTitle is currently being edited (by company id)
+  const [editingJobTitleId, setEditingJobTitleId] = useState(null);
+  // current editing value for the job title input
+  const [editingJobTitleValue, setEditingJobTitleValue] = useState("");
+
+>>>>>>> const DatabaseSearch = () => {
+  // left side filters
+  const [jobTitle, setJobTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [skills, setSkills] = useState("");
+  const [size, setSize] = useState("");
+  const [revenue, setRevenue] = useState("");
+  const [specialties, setSpecialties] = useState("");
+  // company-specific form state
+  const [companyTitle, setCompanyTitle] = useState("");
+  const [companyLocation, setCompanyLocation] = useState("");
+  const [foundedDay, setFoundedDay] = useState("");
+  const [foundedMonth, setFoundedMonth] = useState("");
+  const [foundedYear, setFoundedYear] = useState("");
+  const [tab, setTab] = useState("prospect"); // "prospect" | "companies"
+  const [searchClicked, setSearchClicked] = useState(false);
+  // header quick-search (appears when hovering/clicking title area)
+  const [quickSearch, setQuickSearch] = useState("");
+  const [showHeaderInput, setShowHeaderInput] = useState(false);
+  const [headerHovered, setHeaderHovered] = useState(false);
+  const headerInputRef = useRef(null);
+
+  // State to hold companies data so that jobTitle can be edited
+  const [companies, setCompanies] = useState(MOCK_COMPANIES);
+
+  // State to track which jobTitle is currently being edited (by company id)
+  const [editingJobTitleId, setEditingJobTitleId] = useState(null);
+  // current editing value for the job title input
+  const [editingJobTitleValue, setEditingJobTitleValue] = useState("");
+
+>>>>>>> const DatabaseSearch = () => {
+  // left side filters
+  const [jobTitle, setJobTitle] = useState("");
+  const [location, setLocation] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [skills, setSkills] = useState("");
+  const [size, setSize] = useState("");
+  const [revenue, setRevenue] = useState("");
+  const [specialties, setSpecialties] = useState("");
+  // company-specific form state
+  const [companyTitle, setCompanyTitle] = useState("");
+  const [companyLocation, setCompanyLocation] = useState("");
+  const [foundedDay, setFoundedDay] = useState("");
+  const [foundedMonth, setFoundedMonth] = useState("");
+  const [foundedYear, setFoundedYear] = useState("");
+  const [tab, setTab] = useState("prospect"); // "prospect" | "companies"
+  const [searchClicked, setSearchClicked] = useState(false);
+  // header quick-search (appears when hovering/clicking title area)
+  const [quickSearch, setShowHeaderInput] = useState(false);
