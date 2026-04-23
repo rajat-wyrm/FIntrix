@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (lint + unit tests)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: fintrix
+          POSTGRES_PASSWORD: fintrix
+          POSTGRES_DB: fintrix_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U fintrix"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Generate Prisma client
+        env:
+          DATABASE_URL: postgresql://fintrix:fintrix@localhost:5432/fintrix_test?schema=public
+        run: npx prisma generate
+      - name: Apply schema to test DB
+        env:
+          DATABASE_URL: postgresql://fintrix:fintrix@localhost:5432/fintrix_test?schema=public
+        run: npx prisma db push --accept-data-loss
+      - name: Lint (node syntax check)
+        run: npm run lint
+      - name: Unit tests
+        env:
+          DATABASE_URL: postgresql://fintrix:fintrix@localhost:5432/fintrix_test?schema=public
+          NODE_ENV: test
+        run: npm run test:unit
+      - name: Integration test
+        env:
+          DATABASE_URL: postgresql://fintrix:fintrix@localhost:5432/fintrix_test?schema=public
+          NODE_ENV: test
+          JWT_SECRET: ci-test-secret-do-not-use-in-prod
+        run: node --test test/api.test.js
+
+  frontend:
+    name: Frontend (lint + build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        env:
+          VITE_API_URL: http://localhost:5000/api
+          VITE_API_BASE_URL: http://localhost:5000
+          VITE_SOCKET_URL: http://localhost:5000
+          VITE_APP_NAME: Fintrix
+        run: npm run build
