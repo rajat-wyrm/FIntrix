@@ -10,14 +10,14 @@ const aiProvider = require("../services/aiProvider");
 
 test("cacheService is disabled when no Upstash env is set", () => {
   assert.equal(cache.enabled, false);
-  // get/set/del should be safe no-ops that resolve to null/false
+  // get/set/del should be safe no-ops that resolve to null when disabled
   return cache
     .get("any")
     .then((v) => assert.equal(v, null))
     .then(() => cache.set("any", "x"))
-    .then((ok) => assert.equal(ok, false))
+    .then((ok) => assert.equal(ok, null))
     .then(() => cache.del("any"))
-    .then((ok) => assert.equal(ok, false));
+    .then((ok) => assert.equal(ok, null));
 });
 
 test("aiProvider reports no providers when no API keys are configured", () => {

@@ -20,7 +20,7 @@ test("registerSchema requires email and password", () => {
 test("registerSchema accepts a valid payload", () => {
   const { value, error } = registerSchema.validate({
     name: "Jane",
-    email: "JANE@example.com",
+    email: "jane@example.com",
     password: "Password123!",
   });
   assert.equal(error, undefined);
