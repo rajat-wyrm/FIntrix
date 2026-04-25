@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-// Lightweight lint: parses every .js file under the backend (excluding node_modules) and
-// exits non-zero if any file fails to parse. This is intentionally cheap so the CI step is
-// fast and never fails on style preferences.
+// Lightweight lint: runs `node --check` on every .js file under the backend (excluding
+// node_modules, .git, dist, coverage) and exits non-zero on the first failure. Cheap and
+// reliable — no extra deps, no style preferences, just a parse check.
 const fs = require("fs");
 const path = require("path");
+const { spawnSync } = require("child_process");
 
 const root = path.resolve(__dirname, "..");
 const skipDirs = new Set(["node_modules", ".git", "dist", "coverage", "prisma"]);
@@ -25,13 +26,11 @@ walk(root);
 
 let failed = 0;
 for (const file of files) {
-  try {
-    const src = fs.readFileSync(file, "utf8");
-    // Syntax check only; do not execute the file.
-    new Function(src);
-  } catch (err) {
+  const rel = path.relative(root, file);
+  const res = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
+  if (res.status !== 0) {
     failed += 1;
-    console.error(`[lint] ${path.relative(root, file)}: ${err.message}`);
+    console.error(`[lint] ${rel}: ${(res.stderr || res.stdout || "").trim()}`);
   }
 }
 
