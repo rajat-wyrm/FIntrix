@@ -125,6 +125,7 @@ if (require.main === module) {
 module.exports = {
   app,
   startServer,
+  stopServer: gracefulShutdown,
   get io() {
     return ioRef;
   },
