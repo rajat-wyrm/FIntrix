@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 process.env.NODE_ENV = "test";
 
 const { prisma } = require("../config/postgres");
-const { startServer } = require("../server");
+const { startServer, stopServer } = require("../server");
 
 const unique = `codex-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 const userEmail = `${unique}@example.com`;
@@ -48,17 +48,16 @@ test.after(async () => {
   await prisma.emailSearch.deleteMany({ where: { email: searchEmail } });
   await prisma.user.deleteMany({ where: { email: userEmail } });
 
-  await new Promise((resolve, reject) => {
+  await new Promise((resolve) => {
     server.close((error) => {
       if (error) {
-        reject(error);
-        return;
+        // ignore: server may already be closing
       }
-
       resolve();
     });
   });
 
+  await stopServer().catch(() => {});
   await prisma.$disconnect();
 });
 
