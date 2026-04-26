@@ -4,7 +4,7 @@
   "description": "Fintrix backend API",
   "main": "server.js",
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "scripts": {
     "test": "npm run test:unit && node --test test/api.test.js",
@@ -22,30 +22,30 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.19.2",
-    "axios": "^1.13.2",
+    "@prisma/client": "^6.19.3",
+    "axios": "^1.18.0",
     "bcryptjs": "^3.0.3",
-    "body-parser": "^2.2.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "ethers": "^6.16.0",
-    "express": "^4.21.2",
-    "helmet": "^7.1.0",
+    "body-parser": "^2.3.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.17.0",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
     "ioredis": "^5.11.1",
-    "joi": "^18.0.2",
+    "joi": "^18.2.3",
     "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.10.0",
-    "node-cron": "^4.2.1",
+    "morgan": "^1.11.0",
+    "node-cron": "^4.4.1",
     "node-telegram-bot-api": "^0.67.0",
-    "nodemailer": "^7.0.12",
+    "nodemailer": "^9.0.1",
     "socket.io": "^4.8.3",
-    "twilio": "^5.12.1",
+    "twilio": "^6.0.2",
     "web3": "^4.16.0",
     "whois-json": "^2.0.4"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "prisma": "^6.19.2",
+    "nodemon": "^3.1.14",
+    "prisma": "^6.19.3",
     "socket.io-client": "^4.8.3"
   },
   "type": "commonjs"
